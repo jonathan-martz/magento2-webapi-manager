@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Copyright (c) 2020 Jonathan Martz
+ */
+
 use Magento\Framework\Component\ComponentRegistrar;
 
 ComponentRegistrar::register(

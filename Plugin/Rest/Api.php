@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Copyright (c) 2020 Jonathan Martz
+ */
+
 namespace JonathanMartz\WebApiManager\Plugin\Rest;
 
 use JonathanMartz\WebApiLog\Model\ResourceModel\CollectionFactory;

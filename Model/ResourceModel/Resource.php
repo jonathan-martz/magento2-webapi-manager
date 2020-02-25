@@ -1,4 +1,9 @@
 <?php
+
+/**
+ * Copyright (c) 2020 Jonathan Martz
+ */
+
 namespace JonathanMartz\WebApiManager\Model\ResourceModel;
 
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
