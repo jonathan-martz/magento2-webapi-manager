@@ -2,14 +2,15 @@
 
 namespace JonathanMartz\WebApiManager\Plugin\Rest;
 
+use JonathanMartz\WebApiLog\Model\ResourceModel\CollectionFactory;
 use JonathanMartz\WebApiManager\Model\RequestFactory;
 use Magento\Customer\Model\Session;
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
 use Magento\Framework\UrlInterface;
 use Magento\Webapi\Controller\Rest;
 use Psr\Log\LoggerInterface;
-use function json_encode;
 
 /**
  * Class Api
@@ -41,6 +42,65 @@ class Api
     private $customerSession;
 
     /**
+     *
+     */
+    const CN_G_E = 'webapi-manager/general/enable';
+    /**
+     *
+     */
+    const CN_G_L = 'webapi-manager/general/limit';
+    /**
+     *
+     */
+    const CN_EN_CC = 'webapi-manager/endpoint/customer-create';
+    /**
+     *
+     */
+    const CN_EN_S = 'webapi-manager/endpoint/search';
+    /**
+     * @var ScopeConfigInterface
+     */
+    private $scopeConfig;
+    /**
+     * @var CollectionFactory
+     */
+    private $collectionFactory;
+
+    /**
+     * @return bool
+     */
+    public function isEnabled(): bool
+    {
+        return (bool)$this->scopeConfig->getValue(self::CN_G_E);
+    }
+
+    /**
+     * @param string $name
+     * @return bool
+     */
+    public function getEndpoint(string $name): bool
+    {
+        switch($name) {
+            case "customer-create":
+                return (bool)$this->scopeConfig->getValue(self::CN_EN_CC);
+                break;
+            case "search":
+                return (bool)$this->scopeConfig->getValue(self::CN_EN_S);
+                break;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLimit(): int
+    {
+        return (int)$this->scopeConfig->getValue(self::CN_G_L);
+    }
+
+    /**
      * Api constructor.
      * @param LoggerInterface $logger
      * @param UrlInterface $url
@@ -53,13 +113,17 @@ class Api
         UrlInterface $url,
         RemoteAddress $remote,
         Session $customerSession,
-        RequestFactory $webapistats
+        RequestFactory $webapistats,
+        ScopeConfigInterface $scopeConfig,
+        CollectionFactory $collectionFactory
     ) {
         $this->logger = $logger;
         $this->url = $url;
         $this->remote = $remote;
         $this->customerSession = $customerSession;
         $this->webapistats = $webapistats;
+        $this->scopeConfig = $scopeConfig;
+        $this->collectionFactory = $collectionFactory;
     }
 
     /**
@@ -73,13 +137,15 @@ class Api
         callable $proceed,
         RequestInterface $request
     ) {
-        $id = $this->customerSession->getSessionId();
-        $ip = $this->remote->getRemoteAddress();
+        if($this->isEnabled()) {
+            $id = $this->customerSession->getSessionId();
+            $ip = $this->remote->getRemoteAddress();
 
-        // check ip is banned
+            // check ip is banned
 
-        $model = $this->webapistats->create();
-        // get Collection of ip requests
+            $model = $this->webapistats->create();
+            // get Collection of ip requests
+        }
 
         return $proceed($request);
     }
