@@ -1,0 +1,15 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <webapi-bruteforce-protection>
+            <general>
+                <enable>1</enable>
+                <limit>1000</limit>
+            </general>
+            <endpoint>
+                <customer-create>1</customer-create>
+                <search>1</search>
+            </endpoint>
+        </webapi-bruteforce-protection>
+    </default>
+</config>

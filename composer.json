@@ -1,0 +1,24 @@
+{
+    "name": "jonathan-martz/magento2-webapi-manager",
+    "description": "Manager for Magento2 Web Api",
+    "authors": [
+        {
+            "name": "Jonathan Martz",
+            "homepage": "https://www.jmartz.de"
+        }
+    ],
+    "require": {
+        "magento/module-webapi": ">=100.0.2",
+        "jonathan-martz/magento2-webapi-log": "dev-master"
+    },
+    "type": "magento2-module",
+    "license": "MIT",
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "JonathanMartz\\WebApiManager\\": "."
+        }
+    }
+}
