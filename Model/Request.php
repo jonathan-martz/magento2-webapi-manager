@@ -1,9 +1,4 @@
 <?php
-
-/**
- * Copyright (c) 2020 Jonathan Martz
- */
-
 namespace JonathanMartz\WebApiManager\Model;
 
 use Magento\Framework\Model\AbstractModel;

@@ -1,6 +1,7 @@
 <?php
 /**
- * Copyright (c) 2020 Jonathan Martz
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.
  */
 
 namespace JonathanMartz\WebApiManager\Setup;
