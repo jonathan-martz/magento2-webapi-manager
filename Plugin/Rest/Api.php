@@ -133,10 +133,14 @@ class Api
         if($this->isEnabled()) {
             $id = $this->customerSession->getSessionId();
             $ip = $this->remote->getRemoteAddress();
+            $url = str_replace([$this->url->getBaseUrl(), 'rest/V1/', 'index.php/'], ['', '', ''], $this->url->getCurrentUrl());
 
             $model = $this->webapistats->create();
             $collection = $model->getCollection();
             $collection->addFieldToFilter('ip', ['eq' => sha1($ip)]);
+
+            // add filter for url
+            // add filter for time (hour?)
 
             var_dump('User Requests: ' . count($collection));
         }
