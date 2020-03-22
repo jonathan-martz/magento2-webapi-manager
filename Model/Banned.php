@@ -7,14 +7,14 @@ use Magento\Framework\Model\AbstractModel;
  * Class Request
  * @package JonathanMartz\WebApiManager\Model
  */
-class Request extends AbstractModel
+class Banned extends AbstractModel
 {
     /**
      *
      */
     public function _construct()
     {
-        $this->_init("JonathanMartz\WebApiManager\Model\ResourceModel\Resource");
+        $this->_init("JonathanMartz\WebApiManager\Model\ResourceModel\Banned");
     }
 }
 

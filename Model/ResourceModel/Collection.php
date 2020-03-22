@@ -9,8 +9,8 @@ class Collection extends AbstractCollection
     protected function _construct()
     {
         $this->_init(
-            'JonathanMartz\WebApiManager\Model\Request',
-            'JonathanMartz\WebApiManager\Model\ResourceModel\Resource'
+            'JonathanMartz\WebApiManager\Model\RequeBannedst',
+            'JonathanMartz\WebApiManager\Model\ResourceModel\Banned'
         );
     }
 }
