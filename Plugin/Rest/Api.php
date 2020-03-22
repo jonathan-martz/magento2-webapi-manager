@@ -134,10 +134,11 @@ class Api
             $id = $this->customerSession->getSessionId();
             $ip = $this->remote->getRemoteAddress();
 
-            // check ip is banned
-
             $model = $this->webapistats->create();
-            // get Collection of ip requests
+            $collection = $model->getCollection();
+            $collection->addFieldToFilter('ip', ['eq' => sha1($ip)]);
+
+            var_dump('User Requests: ' . count($collection));
         }
 
         return $proceed($request);
