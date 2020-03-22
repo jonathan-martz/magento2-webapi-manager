@@ -2,25 +2,14 @@
 
 namespace JonathanMartz\WebApiManager\Plugin\Rest;
 
-use JonathanMartz\WebApiLog\Model\ResourceModel\CollectionFactory;
 use JonathanMartz\WebApiManager\Model\RequestFactory;
 use Magento\Customer\Model\Session;
-use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\RequestInterface;
-use Magento\Framework\Controller\Result\JsonFactory;
-use Magento\Framework\Controller\ResultFactory;
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Filesystem;
-use Magento\Framework\Filesystem\Io\File;
 use Magento\Framework\HTTP\PhpEnvironment\RemoteAddress;
 use Magento\Framework\UrlInterface;
 use Magento\Webapi\Controller\Rest;
 use Psr\Log\LoggerInterface;
-use function file_get_contents;
-use function file_put_contents;
-use function json_encode;
 
 /**
  * Class Api
@@ -71,36 +60,6 @@ class Api
      * @var ScopeConfigInterface
      */
     private $scopeConfig;
-    /**
-     * @var CollectionFactory
-     */
-    private $collectionFactory;
-    /**
-     * @var DirectoryList
-     */
-    private $directoryList;
-    /**
-     * @var File
-     */
-    private $file;
-    /**
-     * @var DriverInterface
-     */
-    private $driver;
-    /**
-     * @var Filesystem
-     */
-    private $filesytem;
-    /**
-     * @var Filesystem
-     */
-    private $filesystem;
-
-    private $jsonResultFactory;
-    /**
-     * @var ResultFactory
-     */
-    private $resultFactory;
 
     /**
      * @return bool
@@ -148,61 +107,39 @@ class Api
         LoggerInterface $logger,
         UrlInterface $url,
         RemoteAddress $remote,
-        ScopeConfigInterface $scopeConfig,
-        CollectionFactory $collectionFactory,
-        DirectoryList $directoryList,
-        Filesystem $filesystem,
-        File $file,
-        JsonFactory $jsonResultFactory
+        Session $customerSession,
+        RequestFactory $webapistats,
+        ScopeConfigInterface $scopeConfig
     ) {
         $this->logger = $logger;
         $this->url = $url;
         $this->remote = $remote;
+        $this->customerSession = $customerSession;
+        $this->webapistats = $webapistats;
         $this->scopeConfig = $scopeConfig;
-        $this->collectionFactory = $collectionFactory;
-        $this->directoryList = $directoryList;
-        $this->filesystem = $filesystem;
-        $this->file = $file;
-        $this->jsonResultFactory = $jsonResultFactory;
     }
 
-    public function beforeDispatch(
+    /**
+     * @param Rest $subject
+     * @param callable $proceed
+     * @param RequestInterface $request
+     * @return mixed
+     */
+    public function aroundDispatch(
         Rest $subject,
+        callable $proceed,
         RequestInterface $request
     ) {
-        $ip = $this->remote->getRemoteAddress();
-
         if($this->isEnabled()) {
-            //@todo use php session id to identify
+            $id = $this->customerSession->getSessionId();
+            $ip = $this->remote->getRemoteAddress();
 
-            $filePath = "/webapi-manager/user/";
-            $pdfPath = $this->directoryList->getPath('pub') . $filePath;
-            $ioAdapter = $this->file;
-            if(!is_dir($pdfPath)) {
-                $ioAdapter->mkdir($pdfPath, 0775);
-            }
+            // check ip is banned
 
-            $filename = $pdfPath . '/' . sha1($ip . '-' . date('d.m.Y H')) . '.json';
-
-            if(file_exists($filename)) {
-                $file = file_get_contents($filename);
-                file_put_contents($filename, (int)$file + 1);
-
-                if($file > $this->getLimit()) {
-                    $this->logger->critical('user blocked from request. (' . sha1($ip) . ')');
-                    $data = ['message' => 'Your now blocked for the rest of the hour. Reason: to many requests.'];
-
-                    die(json_encode($data));
-                }
-            }
-            else {
-                file_put_contents($filename, 1);
-            }
+            $model = $this->webapistats->create();
+            // get Collection of ip requests
         }
-        else {
-            $this->logger->info('user blocked from request. (' . sha1($ip) . ')');
-            $data = ['message' => 'Api Endpoint disabled. Please contact the admin.'];
-            die(json_encode($data));
-        }
+
+        return $proceed($request);
     }
 }

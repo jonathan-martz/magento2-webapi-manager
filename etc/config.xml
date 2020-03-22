@@ -4,7 +4,7 @@
         <webapi-manager>
             <general>
                 <enable>1</enable>
-                <limit>10</limit>
+                <limit>1000</limit>
             </general>
             <endpoint>
                 <customer-create>1</customer-create>

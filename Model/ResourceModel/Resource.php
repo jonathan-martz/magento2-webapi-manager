@@ -7,7 +7,7 @@ use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
  * Class Resource
  * @package JonathanMartz\WebApiManager\Model\ResourceModel
  */
-class Banned extends AbstractDb
+class Resource extends AbstractDb
 {
     /**
      *

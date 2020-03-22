@@ -1,6 +1,6 @@
 <?php
 
-namespace JonathanMartz\WebApiManager\Model\ResourceModel\Banned;
+namespace JonathanMartz\WebApiManager\Model\ResourceModel;
 
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
 
@@ -9,8 +9,8 @@ class Collection extends AbstractCollection
     protected function _construct()
     {
         $this->_init(
-            'JonathanMartz\WebApiManager\Model\Banned',
-            'JonathanMartz\WebApiManager\Model\ResourceModel\Banned'
+            'JonathanMartz\WebApiManager\Model\Request',
+            'JonathanMartz\WebApiManager\Model\ResourceModel\Resource'
         );
     }
 }
